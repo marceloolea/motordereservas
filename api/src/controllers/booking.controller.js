@@ -133,7 +133,7 @@ const listMyBookings = async (req, res) => {
     return successResponse(res, enriched, 'Reservas obtenidas');
   } catch (error) {
     console.error('listMyBookings error:', error);
-    return errorResponse(res, 'Error al listar reservas', 500);
+    return errorResponse(res, 'Error al listar reservas', 500, [error.message, error.details, error.hint, error.code].filter(Boolean));
   }
 };
 
