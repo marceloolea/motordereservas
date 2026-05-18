@@ -9,7 +9,8 @@ const validateProfile = (req, res, next) => {
     specialization,
     professional_type,
     hourly_rate,
-    experience_years
+    experience_years,
+    slot_duration_minutes
   } = req.body;
 
   if (professional_type === undefined || professional_type === null || professional_type === '') {
@@ -43,6 +44,13 @@ const validateProfile = (req, res, next) => {
     const years = Number(experience_years);
     if (!Number.isInteger(years) || years < 0 || years > 80) {
       errors.push('experience_years debe ser un entero entre 0 y 80');
+    }
+  }
+
+  if (slot_duration_minutes !== undefined && slot_duration_minutes !== null && slot_duration_minutes !== '') {
+    const dur = Number(slot_duration_minutes);
+    if (!Number.isInteger(dur) || dur <= 0 || dur > 480) {
+      errors.push('slot_duration_minutes debe ser un entero entre 1 y 480');
     }
   }
 

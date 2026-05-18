@@ -9,6 +9,7 @@ const PUBLIC_FIELDS = `
   professional_type,
   hourly_rate,
   experience_years,
+  slot_duration_minutes,
   created_at,
   updated_at,
   users:users!profiles_user_id_fkey ( id, full_name, email, phone, role )
@@ -22,7 +23,8 @@ const upsertProfile = async (req, res) => {
       specialization,
       professional_type,
       hourly_rate,
-      experience_years
+      experience_years,
+      slot_duration_minutes
     } = req.body;
 
     const { data: existing } = await supabaseAdmin
@@ -37,7 +39,10 @@ const upsertProfile = async (req, res) => {
       specialization,
       professional_type,
       hourly_rate,
-      experience_years
+      experience_years,
+      ...(slot_duration_minutes !== undefined && slot_duration_minutes !== null && slot_duration_minutes !== ''
+        ? { slot_duration_minutes: Number(slot_duration_minutes) }
+        : {})
     };
 
     let query;

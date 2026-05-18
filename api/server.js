@@ -4,6 +4,7 @@ const cors = require('cors');
 const errorHandler = require('./src/middleware/error-handler');
 const authRoutes = require('./src/routes/auth.routes');
 const profileRoutes = require('./src/routes/profile.routes');
+const availabilityRoutes = require('./src/routes/availability.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +28,7 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profiles', profileRoutes);
+app.use('/api/availability', availabilityRoutes);
 
 // Middleware de errores (debe ir al final)
 app.use(errorHandler);
