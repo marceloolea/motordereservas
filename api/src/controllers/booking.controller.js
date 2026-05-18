@@ -77,7 +77,7 @@ const createBooking = async (req, res) => {
     return successResponse(res, data, 'Reserva creada en estado pending', 201);
   } catch (error) {
     console.error('createBooking error:', error);
-    return errorResponse(res, 'Error al crear la reserva', 500);
+    return errorResponse(res, 'Error al crear la reserva', 500, [error.message, error.details, error.hint, error.code].filter(Boolean));
   }
 };
 
