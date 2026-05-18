@@ -18,12 +18,34 @@ const getChileToday = () => {
   return fmt.format(new Date());
 };
 
+const getChileNow = () => {
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: TIMEZONE,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false
+  });
+  const parts = fmt.formatToParts(new Date());
+  const get = (t) => parts.find((p) => p.type === t)?.value;
+  const hh = get('hour') === '24' ? '00' : get('hour');
+  return {
+    date: `${get('year')}-${get('month')}-${get('day')}`,
+    time: `${hh}:${get('minute')}`
+  };
+};
+
 const computeEndTime = (startTime, durationMinutes) => {
   const startMin = timeToMinutes(startTime);
   return minutesToTime(startMin + durationMinutes);
 };
 
 const isPastDate = (date) => date < getChileToday();
+
+const isBookingEndPassed = (bookingDate, endTime) => {
+  const now = getChileNow();
+  if (bookingDate < now.date) return true;
+  if (bookingDate > now.date) return false;
+  return endTime <= now.time;
+};
 
 const slotMatchesGenerated = ({ profile, schedules, exceptions, date, startTime, endTime }) => {
   const slots = generateSlots({
@@ -87,7 +109,9 @@ const loadProfessionalContextForDate = async (professionalId, date) => {
 module.exports = {
   ACTIVE_STATUSES,
   getChileToday,
+  getChileNow,
   isPastDate,
+  isBookingEndPassed,
   computeEndTime,
   slotMatchesGenerated,
   hasOverlap,

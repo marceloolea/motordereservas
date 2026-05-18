@@ -3,6 +3,7 @@ const { successResponse, errorResponse } = require('../utils/response');
 const {
   ACTIVE_STATUSES,
   isPastDate,
+  isBookingEndPassed,
   computeEndTime,
   slotMatchesGenerated,
   hasOverlap,
@@ -165,7 +166,7 @@ const getBookingById = async (req, res) => {
 const fetchBookingForAction = async (id) => {
   const { data, error } = await supabaseAdmin
     .from('bookings')
-    .select('id, client_id, professional_id, status, booking_date, start_time')
+    .select('id, client_id, professional_id, status, booking_date, start_time, end_time')
     .eq('id', id)
     .maybeSingle();
   if (error) throw error;
@@ -245,6 +246,9 @@ const completeBooking = async (req, res) => {
     }
     if (booking.status !== 'confirmed') {
       return errorResponse(res, `No se puede completar una reserva en estado '${booking.status}'`, 400);
+    }
+    if (!isBookingEndPassed(booking.booking_date, booking.end_time)) {
+      return errorResponse(res, 'No se puede completar antes del horario de finalización de la sesión', 400);
     }
 
     const { data, error } = await supabaseAdmin

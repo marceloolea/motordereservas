@@ -25,11 +25,48 @@ export const formatDateCL = (isoDate) => {
   return `${d}/${m}/${y}`;
 };
 
-export const todayISO = () => {
-  const d = new Date();
-  const tz = new Date(d.toLocaleString('en-US', { timeZone: TIMEZONE }));
-  const y = tz.getFullYear();
-  const m = String(tz.getMonth() + 1).padStart(2, '0');
-  const day = String(tz.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
+export const chileNow = () => {
+  const fmt = new Intl.DateTimeFormat('en-CA', {
+    timeZone: TIMEZONE,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  });
+  const parts = fmt.formatToParts(new Date());
+  const get = (t) => parts.find((p) => p.type === t)?.value;
+  const hh = get('hour') === '24' ? '00' : get('hour');
+  return {
+    date: `${get('year')}-${get('month')}-${get('day')}`,
+    time: `${hh}:${get('minute')}`,
+  };
+};
+
+export const todayISO = () => chileNow().date;
+
+export const isBookingEndPassed = (bookingDate, endTime) => {
+  const now = chileNow();
+  if (bookingDate < now.date) return true;
+  if (bookingDate > now.date) return false;
+  return endTime <= now.time;
+};
+
+export const addDaysISO = (isoDate, days) => {
+  const [y, m, d] = isoDate.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  const yy = dt.getUTCFullYear();
+  const mm = String(dt.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(dt.getUTCDate()).padStart(2, '0');
+  return `${yy}-${mm}-${dd}`;
+};
+
+export const dayOfWeekFromISO = (isoDate) => {
+  const [y, m, d] = isoDate.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+};
+
+export const longDateCL = (isoDate) => {
+  if (!isoDate) return '';
+  const dow = DAYS_OF_WEEK[dayOfWeekFromISO(isoDate)].label;
+  const [y, m, d] = isoDate.split('-');
+  return `${dow} ${d}/${m}/${y}`;
 };

@@ -7,11 +7,13 @@ import { Input } from '../../components/ui/Input';
 import { Label } from '../../components/ui/Label';
 import { Alert } from '../../components/ui/Alert';
 
-export function RegisterPage() {
+export function RegisterPage({ role = 'client' }) {
   const { register: registerUser } = useAuth();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const isPro = role === 'professional';
 
   const {
     register,
@@ -25,14 +27,16 @@ export function RegisterPage() {
     setServerError(null);
     setSubmitting(true);
     try {
-      await registerUser({
+      const user = await registerUser({
         full_name: values.full_name.trim(),
         email: values.email.trim(),
         phone: values.phone.trim() || undefined,
         password: values.password,
-        role: 'professional',
+        role,
       });
-      navigate('/pro', { replace: true });
+      navigate(user.role === 'professional' ? '/pro' : '/profesionales', {
+        replace: true,
+      });
     } catch (err) {
       setServerError(err.message || 'No se pudo crear la cuenta');
     } finally {
@@ -42,9 +46,13 @@ export function RegisterPage() {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-slate-900 mb-1">Crear cuenta</h2>
+      <h2 className="text-xl font-semibold text-slate-900 mb-1">
+        {isPro ? 'Crear cuenta profesional' : 'Crear cuenta'}
+      </h2>
       <p className="text-sm text-slate-500 mb-5">
-        Registrate como profesional para ofrecer turnos.
+        {isPro
+          ? 'Registrate como profesional para ofrecer turnos.'
+          : 'Registrate como cliente para reservar turnos.'}
       </p>
 
       {serverError && <Alert className="mb-4">{serverError}</Alert>}
@@ -123,6 +131,24 @@ export function RegisterPage() {
         <Link to="/login" className="font-medium text-slate-900 hover:underline">
           Iniciar sesión
         </Link>
+      </p>
+
+      <p className="mt-2 text-xs text-slate-500 text-center">
+        {isPro ? (
+          <>
+            ¿Sos cliente?{' '}
+            <Link to="/register" className="font-medium text-slate-900 hover:underline">
+              Crear cuenta de cliente
+            </Link>
+          </>
+        ) : (
+          <>
+            ¿Sos profesional?{' '}
+            <Link to="/register-pro" className="font-medium text-slate-900 hover:underline">
+              Crear cuenta profesional
+            </Link>
+          </>
+        )}
       </p>
     </div>
   );

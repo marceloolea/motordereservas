@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Check, X, CheckCircle2 } from 'lucide-react';
 import { bookingsApi } from '../../api/bookings.api';
-import { formatDateCL, formatTime } from '../../lib/datetime';
+import { formatDateCL, formatTime, isBookingEndPassed } from '../../lib/datetime';
 import { Button } from '../../components/ui/Button';
 import { Spinner } from '../../components/ui/Spinner';
 import { Alert } from '../../components/ui/Alert';
@@ -70,6 +70,7 @@ export function BookingDetailPage() {
   const isPending = b.status === 'pending';
   const isConfirmed = b.status === 'confirmed';
   const canCancel = isPending || isConfirmed;
+  const canComplete = isConfirmed && isBookingEndPassed(b.booking_date, b.end_time);
   const busy =
     confirmMut.isPending || completeMut.isPending || cancelMut.isPending;
 
@@ -153,9 +154,26 @@ export function BookingDetailPage() {
               </Button>
             )}
             {isConfirmed && (
-              <Button onClick={() => completeMut.mutate()} loading={busy}>
-                <CheckCircle2 className="h-4 w-4" /> Marcar completada
-              </Button>
+              <div className="flex flex-col gap-1">
+                <Button
+                  onClick={() => completeMut.mutate()}
+                  loading={busy}
+                  disabled={!canComplete}
+                  title={
+                    !canComplete
+                      ? 'Disponible una vez finalizada la sesión'
+                      : undefined
+                  }
+                >
+                  <CheckCircle2 className="h-4 w-4" /> Marcar completada
+                </Button>
+                {!canComplete && (
+                  <p className="text-xs text-slate-500">
+                    Vas a poder marcar como completada después de las{' '}
+                    {formatTime(b.end_time)} del {formatDateCL(b.booking_date)}.
+                  </p>
+                )}
+              </div>
             )}
             {canCancel && (
               <Button

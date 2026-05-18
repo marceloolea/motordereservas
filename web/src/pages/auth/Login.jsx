@@ -24,8 +24,9 @@ export function LoginPage() {
     setServerError(null);
     setSubmitting(true);
     try {
-      await login(values.email.trim(), values.password);
-      const to = location.state?.from?.pathname || '/pro';
+      const user = await login(values.email.trim(), values.password);
+      const fallback = user.role === 'professional' ? '/pro' : '/profesionales';
+      const to = location.state?.from?.pathname || fallback;
       navigate(to, { replace: true });
     } catch (err) {
       setServerError(err.message || 'No se pudo iniciar sesión');
@@ -38,7 +39,7 @@ export function LoginPage() {
     <div>
       <h2 className="text-xl font-semibold text-slate-900 mb-1">Iniciar sesión</h2>
       <p className="text-sm text-slate-500 mb-5">
-        Ingresá con tu cuenta de profesional.
+        Ingresá con tu cuenta de cliente o profesional.
       </p>
 
       {serverError && (
