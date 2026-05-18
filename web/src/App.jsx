@@ -31,13 +31,13 @@ function App() {
       <Route element={<PublicLayout />}>
         <Route path="/profesionales" element={<ProfessionalListPage />} />
         <Route path="/profesionales/:id" element={<PublicProfilePage />} />
-        <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedRoute role="client" />}>
           <Route path="/mis-reservas" element={<MyBookingsPage />} />
           <Route path="/mis-reservas/:id" element={<MyBookingDetailPage />} />
         </Route>
       </Route>
 
-      <Route element={<ProtectedRoute />}>
+      <Route element={<ProtectedRoute role="professional" />}>
         <Route path="/pro" element={<DashboardLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="profile" element={<ProfilePage />} />
