@@ -12,13 +12,39 @@ const {
 const BOOKING_FIELDS = `
   id, client_id, professional_id, booking_date, start_time, end_time,
   status, notes, cancellation_reason, cancelled_by, cancelled_at,
-  confirmed_at, completed_at, created_at, updated_at,
-  client:users!client_id ( id, full_name, email, phone ),
-  professional_profile:profiles!professional_id (
-    user_id, professional_type, specialization, hourly_rate, slot_duration_minutes,
-    user:users!user_id ( id, full_name, email, phone )
-  )
+  confirmed_at, completed_at, created_at, updated_at
 `;
+
+const enrichBookings = async (bookings) => {
+  if (!bookings) return bookings;
+  const isArray = Array.isArray(bookings);
+  const list = isArray ? bookings : [bookings];
+  if (list.length === 0) return bookings;
+
+  const userIds = [...new Set(list.flatMap((b) => [b.client_id, b.professional_id]))];
+  const proIds = [...new Set(list.map((b) => b.professional_id))];
+
+  const [{ data: users }, { data: profs }] = await Promise.all([
+    supabaseAdmin.from('users').select('id, full_name, email, phone').in('id', userIds),
+    supabaseAdmin
+      .from('profiles')
+      .select('user_id, professional_type, specialization, hourly_rate, slot_duration_minutes')
+      .in('user_id', proIds)
+  ]);
+
+  const usersById = Object.fromEntries((users || []).map((u) => [u.id, u]));
+  const profsById = Object.fromEntries((profs || []).map((p) => [p.user_id, p]));
+
+  list.forEach((b) => {
+    b.client = usersById[b.client_id] || null;
+    const profile = profsById[b.professional_id] || null;
+    b.professional = profile
+      ? { ...profile, user: usersById[b.professional_id] || null }
+      : { user: usersById[b.professional_id] || null };
+  });
+
+  return isArray ? list : list[0];
+};
 
 const createBooking = async (req, res) => {
   try {
@@ -74,10 +100,11 @@ const createBooking = async (req, res) => {
       .single();
     if (error) throw error;
 
-    return successResponse(res, data, 'Reserva creada en estado pending', 201);
+    const enriched = await enrichBookings(data);
+    return successResponse(res, enriched, 'Reserva creada en estado pending', 201);
   } catch (error) {
     console.error('createBooking error:', error);
-    return errorResponse(res, 'Error al crear la reserva', 500, [error.message, error.details, error.hint, error.code].filter(Boolean));
+    return errorResponse(res, 'Error al crear la reserva', 500);
   }
 };
 
@@ -102,7 +129,8 @@ const listMyBookings = async (req, res) => {
       .order('start_time', { ascending: false });
 
     if (error) throw error;
-    return successResponse(res, data, 'Reservas obtenidas');
+    const enriched = await enrichBookings(data);
+    return successResponse(res, enriched, 'Reservas obtenidas');
   } catch (error) {
     console.error('listMyBookings error:', error);
     return errorResponse(res, 'Error al listar reservas', 500);
@@ -126,7 +154,8 @@ const getBookingById = async (req, res) => {
       return errorResponse(res, 'No tenés acceso a esta reserva', 403);
     }
 
-    return successResponse(res, data, 'Reserva obtenida');
+    const enriched = await enrichBookings(data);
+    return successResponse(res, enriched, 'Reserva obtenida');
   } catch (error) {
     console.error('getBookingById error:', error);
     return errorResponse(res, 'Error al obtener la reserva', 500);
@@ -163,7 +192,8 @@ const confirmBooking = async (req, res) => {
       .select(BOOKING_FIELDS)
       .single();
     if (error) throw error;
-    return successResponse(res, data, 'Reserva confirmada');
+    const enriched = await enrichBookings(data);
+    return successResponse(res, enriched, 'Reserva confirmada');
   } catch (error) {
     console.error('confirmBooking error:', error);
     return errorResponse(res, 'Error al confirmar reserva', 500);
@@ -196,7 +226,8 @@ const cancelBooking = async (req, res) => {
       .select(BOOKING_FIELDS)
       .single();
     if (error) throw error;
-    return successResponse(res, data, 'Reserva cancelada');
+    const enriched = await enrichBookings(data);
+    return successResponse(res, enriched, 'Reserva cancelada');
   } catch (error) {
     console.error('cancelBooking error:', error);
     return errorResponse(res, 'Error al cancelar reserva', 500);
@@ -223,7 +254,8 @@ const completeBooking = async (req, res) => {
       .select(BOOKING_FIELDS)
       .single();
     if (error) throw error;
-    return successResponse(res, data, 'Reserva completada');
+    const enriched = await enrichBookings(data);
+    return successResponse(res, enriched, 'Reserva completada');
   } catch (error) {
     console.error('completeBooking error:', error);
     return errorResponse(res, 'Error al completar reserva', 500);
