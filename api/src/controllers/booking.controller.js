@@ -14,7 +14,10 @@ const BOOKING_FIELDS = `
   status, notes, cancellation_reason, cancelled_by, cancelled_at,
   confirmed_at, completed_at, created_at, updated_at,
   client:users!bookings_client_id_fkey ( id, full_name, email, phone ),
-  professional:users!bookings_professional_id_fkey ( id, full_name, email, phone )
+  professional:profiles!bookings_professional_id_fkey (
+    user_id, professional_type, specialization, hourly_rate, slot_duration_minutes,
+    user:users!profiles_user_id_fkey ( id, full_name, email, phone )
+  )
 `;
 
 const createBooking = async (req, res) => {
