@@ -272,5 +272,6 @@ Esperado: `200` con `{ slots: [...], total, timezone: "America/Santiago", slot_d
 - [ ] `GET /:userId/slots` retorna slots coherentes con las franjas + excepciones.
 - [ ] Validaciones devuelven `400` con `errors[]`.
 - [ ] Commit + push a GitHub.
-- [ ] Railway redeploy automático tras push.
+- [ ] Render redeploy automático tras push (verificar en dashboard de Render).
+- [ ] `GET https://motordereservas-api.onrender.com/api/health` responde `200` tras el redeploy.
 

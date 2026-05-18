@@ -232,24 +232,40 @@ git remote add origin https://github.com/<TU_USUARIO>/motordereservas.git
 git push -u origin main
 ```
 
-### Deploy Backend en Railway
+### Deploy Backend en Render
 
-1. Ir a https://railway.app → **New Project** → **Deploy from GitHub repo** y seleccionar el repo.
-2. En el servicio creado: **Settings**
-   - **Root Directory**: `api`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
-3. **Variables** (Settings → Variables):
+> Migramos de Railway a Render por temas de créditos del free tier. Render free incluye 750h/mes y no requiere tarjeta. Contraparte: cold start de ~30s tras 15 min de inactividad.
+
+1. Ir a https://render.com → **Get Started for Free** (loguearse con GitHub).
+2. Dashboard → **New +** → **Web Service** → seleccionar el repo `motordereservas`.
+3. Configuración del servicio:
+
+   | Campo | Valor |
+   | ----- | ----- |
+   | **Name** | `motordereservas-api` |
+   | **Region** | Oregon (US West) u otra cercana |
+   | **Branch** | `main` |
+   | **Root Directory** | `api` |
+   | **Runtime** | `Node` |
+   | **Build Command** | `npm install` |
+   | **Start Command** | `npm start` |
+   | **Instance Type** | `Free` |
+
+4. **Environment Variables** (antes de hacer Deploy):
    - `SUPABASE_URL`
    - `SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_KEY`
    - `JWT_SECRET`
    - `JWT_EXPIRATION` (ej: `7d`)
    - `NODE_ENV=production`
-   - `FRONTEND_URL` (la URL de Vercel cuando la tengas)
-   - `PORT` lo inyecta Railway automáticamente; `server.js` ya usa `process.env.PORT`.
-4. **Networking** → **Generate Domain** para obtener una URL pública.
-5. Probar: `GET https://<railway-domain>/api/health`.
+   - `FRONTEND_URL` (URL de Vercel cuando la tengas; provisional `http://localhost:5173`)
+   - `PORT` lo inyecta Render automáticamente; `server.js` ya usa `process.env.PORT`.
+
+5. Click **Create Web Service**. El primer build tarda ~2–4 min.
+6. Render asigna automáticamente una URL pública: `https://<service-name>.onrender.com`.
+7. Probar: `GET https://<service-name>.onrender.com/api/health`.
+
+**Auto-deploy:** Render hace redeploy automático en cada `git push` a `main`.
 
 ### Deploy Frontend en Vercel
 
@@ -260,10 +276,10 @@ git push -u origin main
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 3. **Environment Variables**:
-   - `VITE_API_URL=https://<railway-domain>/api`
+   - `VITE_API_URL=https://<service-name>.onrender.com/api`
 4. Click **Deploy**.
 5. **Dominio personalizado** (opcional): Project → Settings → Domains → Add → seguir las instrucciones DNS.
-6. Tras desplegar, **volver a Railway** y actualizar `FRONTEND_URL` con la URL final de Vercel (necesario para CORS).
+6. Tras desplegar, **volver a Render** y actualizar `FRONTEND_URL` con la URL final de Vercel (necesario para CORS).
 
 ---
 
@@ -296,8 +312,8 @@ git push -u origin main
 - [ ] Repo creado en GitHub y `git push -u origin main` exitoso.
 
 ### Deploy
-- [ ] Railway: servicio levantado, `GET /api/health` responde `200`.
-- [ ] Railway: variables de entorno completas (Supabase, JWT, FRONTEND_URL).
+- [ ] Render: servicio levantado, `GET /api/health` responde `200`.
+- [ ] Render: variables de entorno completas (Supabase, JWT, FRONTEND_URL).
 - [ ] Vercel: build exitoso y app accesible en su dominio.
-- [ ] Vercel ↔ Railway: requests del frontend al backend funcionan (sin errores CORS).
+- [ ] Vercel ↔ Render: requests del frontend al backend funcionan (sin errores CORS).
 
