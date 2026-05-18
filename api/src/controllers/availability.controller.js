@@ -188,10 +188,20 @@ const getSlots = async (req, res) => {
       .lte('exception_date', to);
     if (eErr) throw eErr;
 
+    const { data: bookings, error: bErr } = await supabaseAdmin
+      .from('bookings')
+      .select('booking_date, start_time, end_time, status')
+      .eq('professional_id', userId)
+      .in('status', ['pending', 'confirmed'])
+      .gte('booking_date', from)
+      .lte('booking_date', to);
+    if (bErr) throw bErr;
+
     const slots = generateSlots({
       profile,
       schedules: schedules || [],
       exceptions: exceptions || [],
+      bookings: bookings || [],
       fromDate: from,
       toDate: to
     });

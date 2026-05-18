@@ -64,7 +64,7 @@ const diffDays = (fromStr, toStr) => {
   return Math.round((db - da) / (1000 * 60 * 60 * 24));
 };
 
-const generateSlots = ({ profile, schedules, exceptions, fromDate, toDate }) => {
+const generateSlots = ({ profile, schedules, exceptions, bookings = [], fromDate, toDate }) => {
   const slotDuration = profile.slot_duration_minutes || 60;
   const slots = [];
 
@@ -75,6 +75,14 @@ const generateSlots = ({ profile, schedules, exceptions, fromDate, toDate }) => 
 
   const exceptionsByDate = exceptions.reduce((acc, e) => {
     (acc[e.exception_date] = acc[e.exception_date] || []).push(e);
+    return acc;
+  }, {});
+
+  const bookingsByDate = bookings.reduce((acc, b) => {
+    (acc[b.booking_date] = acc[b.booking_date] || []).push({
+      start: timeToMinutes(b.start_time),
+      end: timeToMinutes(b.end_time)
+    });
     return acc;
   }, {});
 
@@ -110,14 +118,18 @@ const generateSlots = ({ profile, schedules, exceptions, fromDate, toDate }) => 
       ranges = mergeRanges(ranges);
     }
 
+    const dayBookings = bookingsByDate[dateStr] || [];
     for (const r of ranges) {
       let pos = r.start;
       while (pos + slotDuration <= r.end) {
+        const slotEnd = pos + slotDuration;
+        const isBooked = dayBookings.some((b) => b.start < slotEnd && b.end > pos);
         slots.push({
           date: dateStr,
           day_of_week: dow,
           start_time: minutesToTime(pos),
-          end_time: minutesToTime(pos + slotDuration)
+          end_time: minutesToTime(slotEnd),
+          is_booked: isBooked
         });
         pos += slotDuration;
       }
