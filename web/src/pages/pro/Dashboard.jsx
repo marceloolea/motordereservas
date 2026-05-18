@@ -33,7 +33,7 @@ export function DashboardPage() {
         Hola, {user?.full_name?.split(' ')[0] || 'profesional'} 👋
       </h1>
       <p className="text-slate-600 mt-1">
-        Bienvenido al panel. Desde acá vas a poder gestionar tu perfil,
+        Bienvenido al panel. Desde aquí podrás gestionar tu perfil,
         disponibilidad y reservas.
       </p>
 

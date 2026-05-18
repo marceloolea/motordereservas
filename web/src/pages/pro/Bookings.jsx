@@ -35,7 +35,7 @@ export function BookingsPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-slate-900">Reservas</h1>
         <p className="text-slate-600 mt-1 text-sm">
-          Tus turnos como profesional. Confirmá, completá o cancelá desde el
+          Tus turnos como profesional. Confirma, completa o cancela desde el
           detalle.
         </p>
       </div>

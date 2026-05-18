@@ -46,7 +46,7 @@ export function ProfessionalListPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-slate-900">Profesionales</h1>
         <p className="text-sm text-slate-500 mt-1">
-          Buscá un profesional y reservá tu próximo turno.
+          Busca un profesional y reserva tu próximo turno.
         </p>
       </div>
 

@@ -51,8 +51,8 @@ export function RegisterPage({ role = 'client' }) {
       </h2>
       <p className="text-sm text-slate-500 mb-5">
         {isPro
-          ? 'Registrate como profesional para ofrecer turnos.'
-          : 'Registrate como cliente para reservar turnos.'}
+          ? 'Regístrate como profesional para ofrecer turnos.'
+          : 'Regístrate como cliente para reservar turnos.'}
       </p>
 
       {serverError && <Alert className="mb-4">{serverError}</Alert>}
@@ -127,7 +127,7 @@ export function RegisterPage({ role = 'client' }) {
       </form>
 
       <p className="mt-5 text-sm text-slate-600 text-center">
-        ¿Ya tenés cuenta?{' '}
+        ¿Ya tienes cuenta?{' '}
         <Link to="/login" className="font-medium text-slate-900 hover:underline">
           Iniciar sesión
         </Link>
@@ -136,14 +136,14 @@ export function RegisterPage({ role = 'client' }) {
       <p className="mt-2 text-xs text-slate-500 text-center">
         {isPro ? (
           <>
-            ¿Sos cliente?{' '}
+            ¿Eres cliente?{' '}
             <Link to="/register" className="font-medium text-slate-900 hover:underline">
               Crear cuenta de cliente
             </Link>
           </>
         ) : (
           <>
-            ¿Sos profesional?{' '}
+            ¿Eres profesional?{' '}
             <Link to="/register-pro" className="font-medium text-slate-900 hover:underline">
               Crear cuenta profesional
             </Link>

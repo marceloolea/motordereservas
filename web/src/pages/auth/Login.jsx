@@ -39,7 +39,7 @@ export function LoginPage() {
     <div>
       <h2 className="text-xl font-semibold text-slate-900 mb-1">Iniciar sesión</h2>
       <p className="text-sm text-slate-500 mb-5">
-        Ingresá con tu cuenta de cliente o profesional.
+        Ingresa con tu cuenta de cliente o profesional.
       </p>
 
       {serverError && (
@@ -85,9 +85,9 @@ export function LoginPage() {
       </form>
 
       <p className="mt-5 text-sm text-slate-600 text-center">
-        ¿No tenés cuenta?{' '}
+        ¿No tienes cuenta?{' '}
         <Link to="/register" className="font-medium text-slate-900 hover:underline">
-          Registrate
+          Regístrate
         </Link>
       </p>
     </div>

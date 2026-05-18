@@ -138,7 +138,7 @@ export function MyBookingDetailPage() {
       >
         <div className="space-y-3 text-sm">
           <p className="text-slate-700">
-            ¿Seguro que querés cancelar esta reserva?
+            ¿Seguro que quieres cancelar esta reserva?
           </p>
           <div>
             <Label htmlFor="reason">Motivo (opcional)</Label>

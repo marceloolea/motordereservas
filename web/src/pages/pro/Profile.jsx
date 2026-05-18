@@ -123,8 +123,8 @@ export function ProfilePage() {
         <h1 className="text-2xl font-semibold text-slate-900">Mi perfil</h1>
         <p className="text-slate-600 mt-1 text-sm">
           {isNew
-            ? 'Completá tu perfil profesional para que los clientes puedan encontrarte.'
-            : 'Actualizá los datos de tu perfil profesional.'}
+            ? 'Completa tu perfil profesional para que los clientes puedan encontrarte.'
+            : 'Actualiza los datos de tu perfil profesional.'}
         </p>
       </div>
 

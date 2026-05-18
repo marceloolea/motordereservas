@@ -80,7 +80,7 @@ export function PublicProfilePage() {
       return;
     }
     if (user.role !== 'client') {
-      setServerError('Iniciá sesión como cliente para reservar.');
+      setServerError('Inicia sesión como cliente para reservar.');
       return;
     }
     setServerError(null);

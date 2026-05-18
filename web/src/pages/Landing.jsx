@@ -19,11 +19,11 @@ export function LandingPage() {
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-3xl text-center">
           <h1 className="text-3xl sm:text-4xl font-semibold text-slate-900">
-            Reservá tu próxima sesión
+            Reserva tu próxima sesión
           </h1>
           <p className="mt-3 text-slate-600 max-w-xl mx-auto">
-            Conectamos clientes con psicólogos y profesores. Elegí el rol con el
-            que querés ingresar.
+            Conectamos clientes con psicólogos y profesores. Elige el rol con el
+            que quieres ingresar.
           </p>
 
           <div className="mt-10 grid sm:grid-cols-2 gap-4">
@@ -61,7 +61,7 @@ export function LandingPage() {
           </div>
 
           <p className="mt-8 text-sm text-slate-500">
-            ¿Ya tenés cuenta?{' '}
+            ¿Ya tienes cuenta?{' '}
             <Link to="/login" className="font-medium text-slate-900 hover:underline">
               Iniciar sesión
             </Link>

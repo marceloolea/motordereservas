@@ -10,7 +10,7 @@ export function SchedulePage() {
             Disponibilidad
           </h1>
           <p className="text-slate-600 mt-1 text-sm">
-            Configurá tu horario semanal recurrente. Los clientes solo verán
+            Configura tu horario semanal recurrente. Los clientes solo verán
             slots dentro de estas franjas.
           </p>
         </div>
@@ -21,7 +21,7 @@ export function SchedulePage() {
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-slate-900">Excepciones</h2>
           <p className="text-slate-600 mt-1 text-sm">
-            Bloqueá días o agregá disponibilidad puntual fuera del horario
+            Bloquea días o agrega disponibilidad puntual fuera del horario
             semanal.
           </p>
         </div>

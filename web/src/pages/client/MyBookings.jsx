@@ -53,7 +53,7 @@ export function MyBookingsPage() {
       {!isLoading && !isError && bookings.length === 0 && (
         <div className="text-center py-16 bg-white rounded-lg border border-slate-200">
           <Calendar className="h-10 w-10 text-slate-300 mx-auto mb-3" />
-          <p className="text-slate-600 text-sm">Aún no tenés reservas.</p>
+          <p className="text-slate-600 text-sm">Aún no tienes reservas.</p>
           <Link
             to="/profesionales"
             className="inline-block mt-3 text-sm font-medium text-slate-900 hover:underline"

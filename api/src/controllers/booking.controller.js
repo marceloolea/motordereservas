@@ -53,7 +53,7 @@ const createBooking = async (req, res) => {
     const { professional_id, booking_date, start_time, notes } = req.body;
 
     if (professional_id === clientId) {
-      return errorResponse(res, 'No podés reservarte a vos mismo', 400);
+      return errorResponse(res, 'No puedes reservarte a ti mismo', 400);
     }
     if (isPastDate(booking_date)) {
       return errorResponse(res, 'No se puede reservar en fechas pasadas', 400);
@@ -152,7 +152,7 @@ const getBookingById = async (req, res) => {
     if (!data) return errorResponse(res, 'Reserva no encontrada', 404);
 
     if (data.client_id !== userId && data.professional_id !== userId) {
-      return errorResponse(res, 'No tenés acceso a esta reserva', 403);
+      return errorResponse(res, 'No tienes acceso a esta reserva', 403);
     }
 
     const enriched = await enrichBookings(data);
@@ -209,7 +209,7 @@ const cancelBooking = async (req, res) => {
     const booking = await fetchBookingForAction(id);
     if (!booking) return errorResponse(res, 'Reserva no encontrada', 404);
     if (booking.client_id !== userId && booking.professional_id !== userId) {
-      return errorResponse(res, 'No tenés permiso para cancelar esta reserva', 403);
+      return errorResponse(res, 'No tienes permiso para cancelar esta reserva', 403);
     }
     if (!ACTIVE_STATUSES.includes(booking.status)) {
       return errorResponse(res, `No se puede cancelar una reserva en estado '${booking.status}'`, 400);

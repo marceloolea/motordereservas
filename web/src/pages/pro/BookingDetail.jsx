@@ -169,7 +169,7 @@ export function BookingDetailPage() {
                 </Button>
                 {!canComplete && (
                   <p className="text-xs text-slate-500">
-                    Vas a poder marcar como completada después de las{' '}
+                    Podrás marcar como completada después de las{' '}
                     {formatTime(b.end_time)} del {formatDateCL(b.booking_date)}.
                   </p>
                 )}

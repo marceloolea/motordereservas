@@ -208,7 +208,7 @@ export function ExceptionsSection() {
 
       {upcoming.length === 0 && past.length === 0 && !adding && (
         <p className="text-sm text-slate-500 bg-white border border-slate-200 rounded-lg p-4 text-center">
-          No tenés excepciones configuradas.
+          No tienes excepciones configuradas.
         </p>
       )}
 
