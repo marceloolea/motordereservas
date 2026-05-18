@@ -13,10 +13,10 @@ const BOOKING_FIELDS = `
   id, client_id, professional_id, booking_date, start_time, end_time,
   status, notes, cancellation_reason, cancelled_by, cancelled_at,
   confirmed_at, completed_at, created_at, updated_at,
-  client:users!bookings_client_id_fkey ( id, full_name, email, phone ),
-  professional:profiles!bookings_professional_id_fkey (
+  client:users!client_id ( id, full_name, email, phone ),
+  professional_profile:profiles!professional_id (
     user_id, professional_type, specialization, hourly_rate, slot_duration_minutes,
-    user:users!profiles_user_id_fkey ( id, full_name, email, phone )
+    user:users!user_id ( id, full_name, email, phone )
   )
 `;
 
